@@ -138,3 +138,238 @@ if (birthYear <= 2000) {
 }
 console.log(century);
 */
+
+//  TYPE CONVERSION
+// const inputYear = '1991';
+// console.log(inputYear + 18);  // is a string so calc won't work
+
+// result = 199118 - get concatenation
+
+// const inputYear = '1991';
+// console.log(Number(inputYear));
+// console.log(Number(inputYear) + 18); // now will work as a number = 2009
+
+// // what if we try to convert something that is NOT a number
+// console.log(Number(`Jonas`));
+
+// // NaN = not a number is the result = actually means "Invalid Number"
+
+// console.log(typeof NaN);  // weird output of number
+
+// // TYPE COERCION
+// console.log(`I am ` + 23 + ` years old`);  // I am 23 years old
+// console.log(`23` - `10` - 3); // Number 10
+// console.log(`23` + `10` + 3); // String 23103 because of +
+// console.log(`23` / 2); // Number 11.5
+
+// let n = '1' + 1;  // string `11`
+// n = n - 1; // 11 - 1 = 10
+// console.log(n); // output is Number 10
+
+// 2 + 3 + 4 + '5' = `95`
+//   `10` - `4` - `3` - 2 + '5' = `15`
+
+// Truthy and Falsey Values
+
+// 5 Falsey Values : 0, '', undefined, null, NaN
+// ALL these not-exactly-false values will be converted to false when we convert them to a Boolean
+
+// console.log(Boolean(Number(`Alun`))); // false
+// console.log(Boolean(0)); // false
+// console.log(Boolean(undefined)); // false
+// console.log(Boolean('Jonas')); // true
+// console.log(Boolean(null)); // false
+// console.log(Boolean(NaN)); // false
+// console.log(Boolean({})); // true
+
+// const money = 0;
+// if (money) {
+//   console.log(`Don't spend it all ;)`);
+// } else {
+//   console.log(`You should get a job!`);
+// }
+
+// // falsey - You should get a job!
+
+// let height;
+// console.log(typeof height); // undefined
+// if (height) {
+//   console.log(`YAY! Height is defined`);
+// } else {
+//   console.log(`Height is UNDEFINED!`);
+// }
+
+// let height = 0;
+// if (height) {
+//   console.log(`YAY! Height is defined`);
+// } else {
+//   console.log(`Height is UNDEFINED!`);
+// }
+
+// // We get `Height is UNDEFINED! because 0 is falsey!! This can be seen as a bug!!
+
+// const age = 18;
+// if (age === 18) console.log(`You are an adult :D`);
+
+// 18 === 18 - true; 18 === 19 - false
+
+// '18' == 18 - true as double == performs type COERCION
+// '18' === 18 - false as triple == does not perform type COERCION
+
+// const age = '18';
+// if (age === 18) console.log(`You are an adult :D (strict)`);
+// if (age == 18) console.log(`You are an adult :D (loose)`);
+
+// Avoid the loose equality as it introduces some weird bugs
+
+// const favourite = prompt("what's your favourite number?");
+// console.log(favourite);
+// console.log(typeof favourite);
+
+// if (favourite == 23) { // this will work because of ==
+//   console.log(`Cool! 23 is an amazing number`);
+// }
+// // we can introduce else if to look at other conditionals
+
+// if (favourite === 23) { // this will NOT work because of ===
+//   console.log(`Cool! 23 is an amazing number`);
+// } else if (favourite === 7) {
+//   console.log(`7 is also a cool number!!`);
+// } else if (favourite === 9) {
+//   console.log(`9 is also a cool number!!`);
+// } else {
+//   console.log(`Number is not 23 or 7 or 9??? Not cool!`);
+// }
+
+// // different operator
+
+// if (favourite !== 23) console.log(`Why not 23?)`);
+
+// BOOLEAN LOGIC
+
+// Example : 
+// a: Sarah has a drivers licence
+// b: Sarah has good vision
+
+// Two boolean vars that can be true or false
+
+// AND = both statements must be TRUE for result to be TRUE
+
+// OR = one of the statements must be TRUE for the result to be TRUE
+
+// ! = inverts the Boolean, so TRUE becomes FALSE and FALSE becomes TRUE.  This takes precedence and is calculated before the overall AND/OR is evaluated.
+
+// You can use truth tables here but they should not be needed going forward ..
+
+// LOGICAL OPERATORS
+
+// const hasDriversLicence = true;
+// const hasGoodVision = true;
+
+// console.log(hasDriversLicence && hasGoodVision);
+
+// const hasDriversLicence = true;
+// const hasGoodVision = false;
+
+// console.log(hasDriversLicence && hasGoodVision); // false
+// console.log(hasDriversLicence || hasGoodVision); // true
+// console.log(!hasDriversLicence); // false
+
+// const shouldDrive = hasDriversLicence && hasGoodVision;
+
+// if (shouldDrive) {
+//   console.log(`Sarah should drive`);
+// } else {
+//   console.log(`Someone else should drive`);
+// }
+
+// const hasDriversLicence = true;
+// const hasGoodVision = true;
+// const isTired = false;
+// console.log(hasDriversLicence && hasGoodVision && !isTired); //true
+
+// if (hasDriversLicence && hasGoodVision && !isTired) {
+//   console.log(`Sarah should drive`);
+// } else {
+//   console.log(`Someone else should drive`);
+// }
+
+// sarah should drive
+
+// SWICH STATEMENTS
+
+// const day = `saturday`;
+// switch (day) {
+//   case `monday`:
+//     console.log('Plan course structure');
+//     console.log('Go to coding meeting');
+//     break;
+//   case `tuesday`:
+//     console.log(`Prepare theory videos`);
+//     break;
+//   case `wednesday`:
+//   case `thursday`:
+//     console.log(`Write code examples`);
+//     break;
+//   case `friday`:
+//     console.log(`Record videos`);
+//     break;
+//   case `saturday`:
+//   case `sunday`:
+//     console.log(`Enjoy the weekend`);
+//     break;
+//   default:
+//     console.log(`Not a valid day!`);
+// }
+
+// Statements and Expressions
+
+// Statement = like sentence that doesn't in itself produce a value
+
+// Expression = piece of code that produces a IDBCursorWithValue
+
+// The Conditional (Ternary) Operator
+
+// const age = 23;
+
+// age >= 18 ? console.log(`I like to drink wine`) : console.log(`I like to drink water`);
+
+// let drink2;
+
+// if (age >= 18) {
+//   drink2 = 'wine';
+// } else {
+//   drink2 = 'water';
+// }
+
+// console.log(drink2);  // wine
+
+// // allows operator inside of the template literal
+
+// console.log(`I like to drink ${age >= 18 ? 'wine' : 'water'}`);
+// // I like to drink wine
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
