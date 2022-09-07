@@ -205,3 +205,153 @@
 
 //  INTRODUCTION TO OBJECTS
 
+// Until now, we've been using arrays to store multiple values in a single variable.  Looking at the friends array, we know that Jonas is related to the firstName var, but there's no way to show this in arrays.  Hence, objects allow us to use key:value pairs inside of {} (rather than [])to essentially label values with a key (or var name) ..
+
+// const jonasArray = [
+//     'Jonas',
+//     'Scmedtmann',
+//     2037 - 1991,
+//     'teacher',
+//     [`Michael`, `Steven`, `Peter`]
+// ];
+
+// // could have firstName, lastName, age, job, friends as var labels
+
+// const jonasObject = {
+//     firstName: 'Jonas',
+//     lastName: 'Schmedtmann',
+//     age: 2037 - 1991,
+//     job: 'teacher',
+//     friends: [`Michael`, `Steven`, `Peter`]
+// };
+
+// console.log(jonasObject);
+
+// Object literal syntax - many ways to write objects, this is the simplest
+
+// Note: array needs order (access via index) but for objects, order doesn't matter .. We will see how to access data in the next section ..
+
+
+// DOT VS BRACKET NOTATION
+
+// Dot Notation
+// Want the lastName - just use jonas.lastName
+// const jonas = {
+//     firstName: 'Jonas',
+//     lastName: 'Schmedtmann',
+//     age: 2037 - 1991,
+//     job: 'teacher',
+//     friends: [`Michael`, `Steven`, `Peter`]
+// };
+
+// console.log(jonas.lastName);  // Schmedtmann
+
+// // Brackets
+// // Do the same thing using bracket notation!!
+// // Can use expression when using []
+
+// console.log(jonas['lastName']);  // Schmedtmann
+
+
+// const nameKey = "Name";
+// console.log(jonas['first' + nameKey]);  // Jonas
+// console.log(jonas['last' + nameKey]);  // Schmedtmann
+
+// // same thing would NOT work with the dot notation - must use final property name (not computed!!)
+
+// // don't know which property we want to know yet - will get it via prompt
+
+// const interestedIn = prompt(`What do you want to know about Jonas? Choose between firstName, lastName, age, job and friends`);
+
+// console.log(jonas[interestedIn]);
+// console.log(jonas.interestedIn);
+
+// // If you choose to answer the prompt with something other than the keys suggested, you will get an 'undefined'.  We can use this truthy/falsey scenario to handle the undefined state!!! Note also, how the . notation will also result in 'undefined', as it can't handle the computed value.
+
+// if (jonas[interestedIn]) {
+//     console.log(jonas[interestedIn]);
+// } else {
+//     console.log('Wrong Request!');
+// }
+
+// // add some data to the object
+
+// jonas.location = 'Portugal';
+// jonas['twitter'] = '@jonasschmedtmann';
+// console.log(jonas);
+
+// // Challenge - write sentence in dynamic way
+// // Jonas has 3 friends, and his best friend is called Michael"
+// // Need Jonas, 3 and Michael (first friend in array)
+
+// console.log(`${jonas.firstName} has ${jonas.friends.length} friends, and his best friend is called ${jonas.friends[0]}.`);
+
+// OBJECT METHODS
+
+// update object to show birthYear and Boolean data type
+// const jonas = {
+//     firstName: 'Jonas',
+//     lastName: 'Schmedtmann',
+//     birthYear: 1991,
+//     job: 'teacher',
+//     friends: [`Michael`, `Steven`, `Peter`],
+//     hasDriversLicence: true,
+
+//     // calcAge: function (birthYear) {
+//     //     return 2037 - birthYear
+//     // }
+
+//     // calcAge: function () {
+//     //     console.log(this);
+//     //     return 2037 - this.birthYear;
+//     // }
+
+//     calcAge: function () {
+//         this.age = 2037 - this.birthYear;
+//         return this.age;
+//     },
+
+//     getSummary: function () {
+//         return `${this.firstName} is a ${this.calcAge()}-year old ${this.job}, and he ${this.hasDriversLicence ? `has a driver's licence` : `does not have a driver's licence`}`
+//     }
+
+// };
+
+// // Note that functions are values, and as such, can be stored as a value in an object's key:value pairing!!
+
+// // Method = value that holds a function
+
+// // console.log(jonas.calcAge(1991)); // 46 dot notation
+// // console.log(jonas['calcAge'](1991)); // 46 bracket notation
+
+// // access birthYear directly from the object without having to pass it in!
+
+// console.log(jonas.calcAge()); // 46 using this keyword to ref birthYear
+
+// // this - great not to hard-code the object name in case it changes
+
+// // most efficient method is the third one which does the calc once and stores the value in this.age.  For larger calcs, it would be time-consuming to do the calc each time that the method is called!!!
+
+// console.log(jonas.age); // 46 stored as this.age
+
+// // Mini-challenge
+// // Write a method to produce a summary sentence dynamically - "Jonas is a 46-year old teacher, and he has a driver's licence" (or " has not a driver's licence if hasDriversLicence is false")
+
+// // see getSummary method above!!!
+
+// console.log(jonas.getSummary());
+
+// // Note: because arrays can have methods (e.g. jonas.length), arrays are also objects (special type)!!!
+
+// 45. CODING CHALLENGE #3
+
+// 46. ITERATION: THE FOR LOOP
+
+// for loop keeps running while condition is TRUE
+
+// print to the console - Lifting weights repetition n' (where n is the rep number)
+// use a for loop
+
+for (let rep = 1; rep <= 10; rep++) {
+    console.log(`Lifting weights repetition ${rep}`);
+};
