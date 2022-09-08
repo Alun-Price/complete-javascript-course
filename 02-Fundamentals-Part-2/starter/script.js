@@ -474,3 +474,5 @@
 //     if (dice === 6) console.log(`Loop is about to end`);
 // }
 
+// CODING CHALLENGE #4
+
