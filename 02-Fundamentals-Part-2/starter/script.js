@@ -352,6 +352,125 @@
 // print to the console - Lifting weights repetition n' (where n is the rep number)
 // use a for loop
 
-for (let rep = 1; rep <= 10; rep++) {
-    console.log(`Lifting weights repetition ${rep}`);
-};
+// for (let rep = 1; rep <= 10; rep++) {
+//     console.log(`Lifting weights repetition ${rep}`);
+// };
+
+// 47. LOOPING ARRAYS, BREAKING AND CONTINUING
+
+// grab old jonas array
+
+// const jonas = [
+//     'Jonas',
+//     'Schmedtmann',
+//     2037 - 1991,
+//     'teacher',
+//     [`Michael`, `Peter`, `Steven`],
+//     true
+// ];
+
+// loop to print out all the values of the array + their type
+
+// for (let i = 0; i < jonas.length; i++) {
+//     console.log(jonas[i], typeof (jonas[i]));
+// }
+
+// // create an empty array to house the types
+
+// const types = [];
+
+// for (let i = 0; i < jonas.length; i++) {
+//     console.log(jonas[i], typeof (jonas[i]));
+
+//     // types[i] = typeof jonas[i]; // filling the types array (Method 1)
+//     types.push(typeof (jonas[i])); // filling the types array (Method 2 - maybe cleaner)
+// }
+
+// console.log(types); //  ['string', 'string', 'number', 'string', 'object', 'boolean']
+
+// // Say we want to loop through the years array and calculate the ages given that the current year is 2037
+
+// const years = [1991, 2007, 1969, 2020];
+// const ages = [];
+
+// for (let i = 0; i < years.length; i++) {
+//     ages.push(2037 - years[i]);
+// }
+
+// console.log(ages);
+
+// // continue and break
+
+// // checks type of array element
+// // if a string, continues to print the element and its type
+// // if not a string, will 'continue' to the next iteration of the loop
+// // if not a string, 'break' will NOT continue to the next iteration and exits the loop
+
+// console.log(`-----  ONLY STRINGS -------`);
+// for (let i = 0; i < jonas.length; i++) {
+//     if (typeof jonas[i] !== 'string') continue;
+
+//     console.log(jonas[i], typeof (jonas[i]));
+// }
+
+// console.log(`----- BREAK WITH NUMBER -------`);
+// for (let i = 0; i < jonas.length; i++) {
+//     if (typeof jonas[i] === 'number') break;
+
+//     console.log(jonas[i], typeof (jonas[i]));
+// }
+
+
+// 48. LOOPING BACKWARDS AND LOOPS IN LOOPS
+
+// const jonas = [
+//     'Jonas',
+//     'Schmedtmann',
+//     2037 - 1991,
+//     'teacher',
+//     ['Michael', 'Peter', 'Steven']
+// ];
+
+// // 0, 1, 2, 3  = Forward Loop
+// // 4, 3, 2, 1, 0 = Backward Loop
+
+// for (let i = jonas.length - 1; i >= 0; i--) {
+//     console.log(jonas[i]);
+// }
+
+// // Loop in a loop
+// // remember the gym repetition exercise
+
+// for (let exercise = 1; exercise < 4; exercise++) {
+//     console.log(`------Starting exercise ${exercise}`);
+//     // second loop within the first
+//     for (let rep = 1; rep < 6; rep++) {
+//         console.log(`Exercise ${exercise}: Lifting weight repetition ${rep}`);
+//     }
+// }
+
+// 49. THE WHILE LOOP
+
+// go back to the exercise for loop
+// for (let rep = 1; rep = 10; rep++) {
+//     console.log(`Lifting weights repetition ${rep}`);
+// }
+
+// How do we rewrite this using a WHILE loop
+// let rep = 1;
+// while (rep <= 10) {
+//     console.log(`Lifting weights repetition ${rep}`);
+//     rep++;
+// }
+
+// use a while loop when you don't know the number of iterstions beforehand
+// roll of a dice 1-6
+// let dice = Math.trunc(Math.random() * 6) + 1;
+// console.log(dice);
+
+// while (dice !== 6) {
+//     console.log(`You rolled a ${dice}`);
+//     dice = Math.trunc(Math.random() * 6) + 1;
+//     if (dice === 6) console.log(`Loop is about to end`);
+// }
+
