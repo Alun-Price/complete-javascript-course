@@ -590,3 +590,166 @@ const restaurant = {
 // see notes
 
 // Coding Challenge #3
+
+// WORKING WITH STRINGS - PART 1
+
+// const airline = 'TAP Air Portugal';
+// const plane = 'A320';
+
+// console.log(plane[0]); // A
+// console.log(plane[1]); // 3
+// console.log(plane[2]); // 2
+// console.log('B737'[0]); // B
+
+// console.log(airline.length); // 16
+// console.log('B737'.length); // 4
+
+// console.log(airline.indexOf('r')); // 6 - only gives us the first 'r'
+// console.log(airline.lastIndexOf('r')); // 10 - the last 'r'
+// console.log(airline.indexOf('Portugal')); // 8 - search for whole word start index - CASE SENSITIVE
+
+// // USE CASE - SLICE method to extract part of a string
+// console.log(airline.slice(4)); // get substring - strings are primitive so can NOT mutate // Air Portugal
+// console.log(airline.slice(4, 7)); // Air - Note: that end value not included in string!! (4 - 6) end at 7
+
+// console.log(airline.slice(0, airline.indexOf(' '))); // TAP - starts at 0, ends with ' ' space
+// console.log(airline.slice(0, airline.lastIndexOf(' '))); // TAP Air - starts at 0, ends with last space
+// console.log(airline.slice(airline.lastIndexOf(' ') + 1)); // Portugal - starts at space + 1, goes to end
+
+// console.log(airline.slice(-2)); // al - last 2 letters
+// console.log(airline.slice(1, -1)); // AP Air Portuga - starts at 1, finishes at end less one character
+
+// const checkMiddleSeat = function (seat) {
+//   // B and E are middle seats
+//   const s = seat.slice(-1);
+//   if (s === 'B' || s === 'E') console.log(`You got the middle seat`);
+//   else console.log('You got lucky');
+// };
+
+// checkMiddleSeat('11B'); // You got the middle seat
+// checkMiddleSeat('23C'); // You got lucky'
+// checkMiddleSeat('3E'); // You got the middle seat
+
+// console.log(new String('jonas')); // JS converts to object to do methods on it = boxing
+// console.log(typeof new String('jonas').slice(1)); // string - JS converts back to string
+
+// // WORKING WITH STRINGS - PART 2
+// console.log(airline.toLowerCase()); // tap air portugal
+// console.log(airline.toUpperCase()); // TAP AIR PORTUGAL
+
+// // to fix correct capitalisation on name
+// const passenger = 'jOnAS'; // should be Jonas
+// const passengerLower = passenger.toLowerCase();
+// const passengerCorrect =
+//   passengerLower[0].toUpperCase() + passengerLower.slice(1);
+// console.log(passengerCorrect); // Jonas - upper first letter + rest of lower case 1 -end
+
+// // Comparing emails
+// const email = 'hello@jonas.io';
+// const loginEmail = ` Hello@Jonas.Io \n`;
+
+// const lowerEmail = loginEmail.toLowerCase();
+// const trimmedEmail = lowerEmail.trim();
+// console.log(trimmedEmail); // hello@jonas.io
+
+// // do the same thing by chaining the methods
+// const normalizedEmail = loginEmail.toLowerCase().trim();
+// console.log(normalizedEmail); // hello@jonas.io
+// console.log(email === normalizedEmail); // true
+
+// // also trimstart and trimend which do as they suggest
+
+// // replacing
+// const priceGB = '288.97£';
+// const priceUS = priceGB.replace('£', '$').replace('.', ',');
+// console.log(priceUS); // 288,97$
+
+// // change door to gate
+// const announcement = `All passengers come to boarding door 23.  Boarding door 23!`;
+// console.log(announcement.replace(`door`, `gate`)); // Note: only changes first door, not second one
+// // Note: very soon JS should have a replaceAll method but not yet!!
+// console.log(announcement.replaceAll(`door`, `gate`)); // Actually this does work now!!
+
+// // Another solution - use a reg exp
+// console.log(announcement.replace(/door/g, `gate`)); // this replaces all too!!!
+
+// // Booleans
+// const planeNeo = 'A320neo';
+// console.log(planeNeo.includes('A320')); // true
+// console.log(planeNeo.includes('Boeing')); // false
+// console.log(planeNeo.startsWith('A32')); // true
+// console.log(planeNeo.startsWith('A3n')); // false
+
+// if (planeNeo.startsWith('A32') && planeNeo.endsWith('neo')) {
+//   console.log(`Part of the new Airbus family`);
+// }
+
+// // Practice Exercise
+// const checkBaggage = function (items) {
+//   const baggage = items.toLowerCase(); // very nb, as lowercase knife !=  KNIFE
+//   if (baggage.includes('knife') || baggage.includes('gun')) {
+//     console.log(`You are NOT allowed on board!!`);
+//   } else {
+//     console.log(`Welcome on board!!!`);
+//   }
+// };
+
+// checkBaggage('I have a laptop, some food and a pocket Knife'); // You are NOT allowed on board!!
+// checkBaggage('Socks and a camera'); // Welcome on board!!!`
+// checkBaggage('Got some snacks and a gun for protection'); // You are NOT allowed on board!!
+
+// //  Working With Strings - Part 3
+// // SPLIT
+// console.log('a+very+nice+string'.split('+')); // ['a', 'very', 'nice', 'string']
+// console.log('Alun Price'.split(' ')); // ['Alun', 'Price']
+
+// const [firstName, lastName] = 'Jonas Schmedtmann'.split(' ');
+// console.log(firstName); // Jonas
+
+// // JOIN
+// const newName = ['Mr.', firstName, lastName.toUpperCase()].join(' ');
+// console.log(newName); // Mr. Jonas SCHMEDTMANN
+
+// // SPLIT and JOIN
+// const capitalizeName = function (name) {
+//   const names = name.split(' '); // split name by ' '
+//   const namesUpper = [];
+
+//   for (const n of names) {
+//     namesUpper.push(n[0].toUpperCase() + n.slice(1)); // capitalizes each name
+//   }
+
+//   console.log(namesUpper.join(' ')); // joins names with ' '
+// };
+
+// capitalizeName('jessica ann smith davis'); // Jessica Ann Smith Davis
+// capitalizeName('alun price'); // Alun Price
+
+// // Padding
+// const message = 'Go to gate 23';
+// console.log(message.padStart(25, '+')); // ++++++++++++Go to gate 23
+// console.log('Alun'.padStart(25, '+')); // +++++++++++++++++++++Alun
+// console.log('Alun'.padEnd(25, '+')); // Alun+++++++++++++++++++++
+
+// const maskCreditCard = function (number) {
+//   const str = number + ' ';
+//   const last = str.slice(-4);
+//   return last.padStart(str.length, '*');
+// };
+
+// console.log(maskCreditCard('33465657476363773737')); // *****************737
+
+// // Repeat
+// const message2 = 'Bad weather... All departures delayed.. ';
+// console.log(message2.repeat(5));
+// // Bad weather... All departures delayed.. Bad weather... All departures delayed.. Bad weather... All departures delayed.. Bad weather... All departures delayed.. Bad weather... All departures delayed..
+
+// const planesInLine = function (n) {
+//   console.log(`There are ${n} planes in line ${`✈️`.repeat(n)}`);
+// };
+
+// planesInLine(5); // There are 5 planes in line ✈️✈️✈️✈️✈️
+
+// // go to mdn string methods to see all the methods available!!!
+
+// 124. Coding Challenge #4
