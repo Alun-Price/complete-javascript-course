@@ -309,3 +309,284 @@ const restaurant = {
 
 // console.log(rest1);
 // console.log(rest2);
+
+// FOR OF LOOP
+
+// const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
+
+// for (const item of menu) console.log(item);
+// // works like a forEach - no need for for loop conditions + counter, etc...
+
+// // say you want the index too (use .entries())
+// for (const item of menu.entries()) {
+//   console.log(item);
+// }
+// // [0, 'Foccacia] [1, 'Brushetta'] ... and so on
+
+// // Tart it up for a real-world menu
+// for (const [i, el] of menu.entries()) {
+//   console.log(`${i + 1}:  ${el}`);
+// }
+// Note: destructuring of [i, el]
+// i + 1 = to start at 1, 0 looks bad on a menu
+// Get nice numbered menu list
+
+// Enhanced Object Literals
+// Make it easier to create object literals (e.g. restaurant = {..})
+
+// const weekdays = ['mon', 'tue', 'wed', 'thu', 'fri']; // can compute property names as well as values
+// // cut out openingHours and make it a separate object ouside restaurant
+// const openingHours = {
+//   [weekdays[3]]: {
+//     open: 12,
+//     close: 22,
+//   },
+//   [weekdays[3 + 1]]: {
+//     // can compute property names as well as values
+//     open: 11,
+//     close: 23,
+//   },
+//   sat: {
+//     open: 0, // Open 24 hours
+//     close: 24,
+//   },
+// };
+
+// const restaurant = {
+//   name: 'Classico Italiano',
+//   location: 'Via Angelo Tavanti 23, Firenze, Italy',
+//   categories: ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'],
+//   starterMenu: ['Focaccia', 'Bruschetta', 'Garlic Bread', 'Caprese Salad'],
+//   mainMenu: ['Pizza', 'Pasta', 'Risotto'],
+
+//   // Enhanced way of adding openingHours [ES6]
+//   // NOTE: if change openingHours to hours, for example, must change it here too!!!
+//   openingHours,
+
+//   // Can remove the function keyword and :
+//   order(starterIndex, mainIndex) {
+//     return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
+//   },
+
+//   orderDelivery({ starterIndex, mainIndex, time, address }) {
+//     console.log(
+//       `Order Received! ${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${time}`
+//     );
+//   },
+
+//   orderPasta(ing1, ing2, ing3) {
+//     console.log(
+//       `Here is your delicious pasta with ${ing1}, ${ing2} and ${ing3}`
+//     );
+//   },
+
+//   orderPizza(mainIngredient, ...otherIngredients) {
+//     console.log('Main Ingredient: ' + mainIngredient);
+//     console.log('Other Ingredient(s): ' + otherIngredients);
+//   },
+// };
+
+// console.log(restaurant);
+
+// OPTIONAL CHAINING (?)
+// Opening hours for Mondays
+// if (restaurant.openingHours && restaurant.openingHours.mon)
+//   // check if exists - doesnt
+//   console.log(restaurant.openingHours.mon.open); // error undefined.open
+
+// with optional chaining
+// console.log(restaurant.openingHours.mon?.open); // will get undefined at ? point if doesn't exists
+
+// Note: entered language same time as nullish coalescing operator and used together frequently
+
+// Example
+// const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+// for (const day of days) {
+//   //console.log(day);
+//   const open = restaurant.openingHours[day]?.open || 'closed';
+//   if (open === 'closed') {
+//     console.log(`On ${day}, we are closed`);
+//   } else {
+//     console.log(`On ${day}, we open at ${open}`);
+//   }
+// }
+
+// // Methods and Optional Chaining
+// console.log(restaurant.order?.(0, 1) ?? 'Method does not exists'); // ['Foccacia, 'Pasta']
+// console.log(restaurant.orderRisotto?.(0, 1) ?? 'Method does not exists'); // Method does not exist [because it doesnt]
+
+// // Arrays and Optional Chaining
+// const users = [{ name: 'Jonas', email: 'hello@jonas.io' }];
+
+// console.log(users[0]?.name ?? 'User array empty'); // 'Jonas' - checks if exists, otherwise outputs 'User array empty'
+
+// // Replaces
+// if (users.length > 0) console.log(users[0].name);
+// else console.log('User array empty');
+
+// Looping Objects: Object Keys, Values and Entries
+
+// Loop over keys (Property Names)
+
+// const properties = Object.keys(restaurant.openingHours);
+// console.log(properties); // ['thu', 'fri', 'sat']
+
+// let openStr = `We are open on ${properties.length} days: `;
+// for (const day of properties) {
+//   openStr += `${day}, `;
+// }
+
+// console.log(openStr); // We are open on 3 days: thu, fri, sat,
+
+// // Loop over Property Values
+
+// const values = Object.values(restaurant.openingHours);
+// console.log(values); // 0: {open: 12, close: 22}, 1: {open:11, close: 23}, ..
+
+// const entries = Object.entries(restaurant.openingHours);
+// console.log(entries);
+
+// for (const [key, { open, close }] of entries) {
+//   console.log(`On ${key} we open at ${open} and close at ${close}`);
+// }
+// On thu we open at 12 and close at 22 ..
+// On fri we open at 11 and close at 23 ..
+// On sat we open at 0 and close at 24 ..
+
+// SETS
+// ES6 -  2 more data structures added = SETS and MAPS
+
+// SET = collection of UNIQUE VALUES
+
+// const ordersSet = new Set([
+//   'Pasta',
+//   'Pizza',
+//   'Pizza',
+//   'Risotto',
+//   'Pasta',
+//   'Pizza',
+// ]);
+
+// // sets can hold mixed data types
+
+// console.log(ordersSet); // Set(3) {'Pasta', 'Pizza', 'Risotto'}
+
+// // no duplicates - set is an iterable (like an array)
+// // different from an array because, elements are UNIQUE and order is IRRELEVANT [note: no key:vlue pairs]
+
+// console.log(new Set('Alun')); // {'A', 'l', 'u', 'n'}
+// console.log(new Set()); // can be empty
+
+// console.log(ordersSet.size); // 3
+
+// console.log(ordersSet.has('Pizza')); // true
+// console.log(ordersSet.has('Bread')); // false
+
+// ordersSet.add('Garlic Bread');
+// ordersSet.add('Garlic Bread');
+// console.log(ordersSet); // Note: 'Garlic Bread' is added but only ONCE!!!
+
+// ordersSet.delete('Risotto');
+// console.log(ordersSet); // 'Risotto' has been removed from the set
+
+// // ordersSet.clear(); // will clear the whole set
+
+// // Doing something like console.log(ordersSet(0)); gives us undefined
+// // There are no ways to use an index to get a value out of a set
+// // we only need to know if a value is in a set or not!!!
+
+// // MAIN USE CASE OF SETS = REMOVE DUPLICATES FROM ARRAYS
+
+// // Example
+// const staff = ['Waiter', 'Chef', 'Waiter', 'Manager', 'Chef', 'Waiter'];
+
+// const staffUnique = new Set(staff); // array -> set, clears duplicates
+// console.log(staffUnique); // Set(3) {'Waiter', 'Chef', 'Manager'}
+
+// const staffArray = [...staffUnique]; // set -> array, but without the duplicates from before
+// console.log(staffArray); // (3) ['Waiter', 'Chef', 'Manager']
+
+// // if we just wanted to know the number in the set
+// console.log(
+//   new Set(['Waiter', 'Chef', 'Waiter', 'Manager', 'Chef', 'Waiter']).size
+// ); // 3
+
+// // what about number of chars in a string???
+
+// console.log(new Set('jonasschmedtmann').size); // 11
+
+// MAPS
+
+// const rest = new Map();
+// rest.set('name', 'Classico Italiano');
+// rest.set(1, 'Firenze, Italy');
+// console.log(rest.set(2, 'Lisbon, Portugal')); // Map(3) {'name' => 'Classico Italiano', 1 => 'Firenze, Italy', 2 => 'Lisbon, Portugal'}
+
+// // Note: how we can chain things
+// rest
+//   .set('categories', ['Italian', 'Pizzeria', 'Vegetarian', 'Organic'])
+//   .set('open', 11)
+//   .set('close', 23)
+//   .set(true, 'We are open :D')
+//   .set(false, 'We are closed :(');
+
+// console.log(rest.get('name')); // Classico Italiano - all maps have the .get
+// console.log(rest.get(true)); // We are open :D
+// console.log(rest.get(1)); // Firenze, Italy
+
+// const time = 21;
+// console.log(rest.get(time > rest.get('open') && time < rest.get('close'))); // We are open :D
+// // So if both are true, result is true, which maps to 'we are open :D'
+// // If one is false, result is false, which maps to 'we are closed :('
+
+// // Check if a map HAS a certain key, delete a key and what SIZE is the map
+// console.log(rest.has('categories')); // true
+// rest.delete(2); // will delete the key 2 with it's associated value
+// console.log(rest);
+// console.log(rest.size); // 7
+// // clear/remove all the elements from the map
+// // rest.clear();
+
+// // what if we set a key = [1, 2]
+// rest.set([1, 2], 'Test');
+// console.log(rest.get([1, 2])); // undefined, need to set the [1,2] in the call stack
+// const arr = [1, 2];
+// rest.set(arr, 'Test');
+// console.log(rest.get(arr)); // Test
+
+// MAPS : ITERATION
+// const question = new Map([
+//   ['question', 'What is the best programming language in the world?'],
+//   [1, 'C'],
+//   [2, 'Java'],
+//   [3, 'JavaScript'],
+//   ['correct', 3],
+//   [true, 'Correct'],
+//   [false, 'Try again!!'],
+// ]);
+// console.log(question);
+
+// // Convert object to map
+// const hoursMap = new Map(Object.entries(restaurant.openingHours));
+// console.log(hoursMap);
+
+// // Quiz App
+// console.log(question.get('question'));
+// for (const [key, value] of question) {
+//   if (typeof key === 'number') console.log(`Answer ${key}: ${value}`);
+// }
+// const answer = prompt('Your answer');
+// console.log(answer);
+
+// console.log(question.get(answer === question.get(3)));
+
+// // Convert MAP to ARRAY
+// console.log([...question]);
+// console.log([...question.keys()]); // ['question', 1, 2, 3, 'correct', true, false]
+// console.log([...question.values()]); // ['What is the best programming language in the world?', 'C', 'Java', 'JavaScript', 3, 'Correct', 'Try again!!']
+
+// SUMMARY : WHICH DATA STRUCTURE TO USE???
+// see notes
+
+// Coding Challenge #3
