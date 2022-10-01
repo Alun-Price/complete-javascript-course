@@ -61,9 +61,12 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = ''; // empty container - innerHTML like textContent but for HTML
-  movements.forEach(function (mov, i) {
+
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? `deposit` : `withdrawal`; // finds type of movement
     // copy in HTML - remove date part as we'll do that later - use temp lit to fill in the details pertaining to account 1 but in the general sense as this fn will have to work with other account info
     const html = `
@@ -78,25 +81,26 @@ const displayMovements = function (movements) {
   }); // we can use beforeend to reverse order how content is shown
 };
 
-displayMovements(account1.movements); // call the above fn for account 1
+// displayMovements(account1.movements); // call the above fn for account 1
 
 // use reduce to show the balance
 
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${balance} €`;
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
+
+  labelBalance.textContent = `${acc.balance} €`;
 };
 
-calcDisplayBalance(account1.movements);
+// calcDisplayBalance(account1.movements);
 
-const calcDisplaySummary = function (movements) {
-  const incomes = movements
+const calcDisplaySummary = function (acc) {
+  const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
   // labelSumIn - see class in html code (summary__value--in) and then ref vars set at top of script
   labelSumIn.textContent = `${incomes} €`;
 
-  const out = movements
+  const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
   // labelSumOut - see class in html code (summary__value--out) and then ref vars set at top of script
@@ -104,15 +108,15 @@ const calcDisplaySummary = function (movements) {
 
   // lets assume interest is paid on deposits only and at a rate of 1.2% (nice fictional bank!!)
   // new rule means only interest >= 1 will be paid
-  const interest = movements
+  const interest = acc.movements
     .filter(mov => mov > 0)
-    .map(deposit => (deposit * 1.2) / 100)
+    .map(deposit => (deposit * acc.interestRate) / 100)
     .filter(int => int >= 1)
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interest} €`;
+  labelSumInterest.textContent = `${interest.toFixed(2)} €`;
 };
 
-calcDisplaySummary(account1.movements);
+// calcDisplaySummary(account1.movements);
 
 // username = initials = stw
 // Need to take the first letter and put it into an array - what a MAP does!!!
@@ -131,6 +135,115 @@ createUsernames(accounts);
 // console.log(accounts);
 
 //console.log(containerMovements.innerHTML); // helps us to see what the innerHTML contains
+
+const updateUI = function (acc) {
+  // Display movements
+  displayMovements(acc.movements);
+
+  // Display balance
+  calcDisplayBalance(acc);
+
+  // Display summary
+  calcDisplaySummary(acc);
+};
+
+// Event handler
+
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+  // prevent form from submitting
+  e.preventDefault();
+
+  //console.log(`LOGIN`);
+
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+  inputTransferAmount.value = inputTransferTo.value = '';
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and Message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100;
+
+    // Clear the input fields
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+    // Update UI
+    updateUI(currentAccount);
+  }
+});
+
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+  // console.log(amount, receiverAcc); // jd, 100 = 100 {owner: 'Jessica Davis', movements: Array(8), interestRate: 1.5, pin: 2222, username: 'jd'}
+
+  if (
+    amount > 0 &&
+    receiverAcc &&
+    currentAccount.balance >= amount &&
+    receiverAcc?.username !== currentAccount.username
+  ) {
+    // doing the transfer
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+
+    // Update UI
+    updateUI(currentAccount);
+  }
+});
+
+// Loan functionality - must be a deposit that's at least 10% of the loan amount
+
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // Add movement
+    currentAccount.movements.push(amount);
+
+    // Update UI
+    updateUI(currentAccount);
+  }
+
+  inputLoanAmount.value = '';
+});
+
+let sorted = false;
+
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+});
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  if (
+    inputCloseUsername.value === currentAccount.username &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    const index = accounts.findIndex(
+      acc => acc.username === currentAccount.username
+    );
+
+    accounts.splice(index, 1); // Remove account with correct index from accounts array
+
+    containerApp.style.opacity = 0; // Hide UI
+  }
+
+  inputCloseUsername.value = inputClosePin.value = '';
+});
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -370,3 +483,144 @@ createUsernames(accounts);
 
 // keep chaining methods to a minimum - lots of arrays are bad for performance (e.g. using lots of map methods when one will do).
 // bad practice to use chain methods that mutate the original array (e.g. splice, reverse)
+
+// 157. The FIND method
+// Retrieve one element of an array by a condition
+// loops over the array and finds the first element of that array that satisfies the condition
+// different from filter in that only returns the first single value, not a new array
+
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+// const firstWithdrawal = movements.find(mov => mov < 0);
+
+// console.log(movements); // [200, 450, -400, 3000, -650, -130, 70, 1300]
+// console.log(firstWithdrawal); // -400 (i.e the first el < 0 or first withdrawal)
+
+// console.log(accounts);
+// const account = accounts.find(acc => (acc.owner = 'Jessica Davis'));
+// console.log(account); // {owner: 'Jessica Davis', movements: Array(8), interestRate: 1.2, pin: 1111, username: 'js'}
+
+// Really important  - to find an object with a unique characteristic (here, owner = 'Jessica Davis')
+
+// IMPLEMENTING LOGIN
+
+// 161 SOME and EVERY
+
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// // console.log(movements);
+
+// // // EQUALITY
+// // console.log(movements.includes(-130)); // use includes to test if array includes -130 -> it does, so true
+
+// // // want to test using a condition [some = any]
+// // const anyDeposits = movements.some(mov => mov > 0);
+// // console.log(anyDeposits); // true
+
+// // EVERY - only true if everything in the array passes the condition
+
+// console.log(movements.every(mov => mov > 0)); // false
+
+// // Separate callback
+// const deposit = mov => mov > 0;
+// console.log(movements.some(deposit)); // true
+// console.log(movements.every(deposit)); // false
+// console.log(movements.filter(deposit)); // (5) [200, 450, 3000, 70, 1300]
+
+// 162. FLAT and FLATMAP [ES2019]
+
+// const arr = [[1, 2, 3], [4, 5, 6], 7, 8]; // we have an array with some arrays in it
+// console.log(arr.flat()); // [1, 2, 3, 4, 5, 6, 7, 8] -> makes one array with all the individual values
+
+// const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8]; // -> array inside array
+// console.log(arrDeep.flat()); // [Array(2), 3, 4, Array(2), 7, 8] -> only 1 level deep
+// console.log(arrDeep.flat(2)); // [1, 2, 3, 4, 5, 6, 7, 8] -> the 2 allows flat to go another level deeper
+
+// const accountMovements = accounts.map(acc => acc.movements);
+// console.log(accountMovements); // [Array(8), Array(8), Array(8), Array(5)] -> array of movements for each account
+// const allMovements = accountMovements.flat();
+// console.log(allMovements); // [200, 450, -400, 3000, -650, -130, 70, 1300, 5000, 3400, -150, -790, -3210, -1000, 8500, -30, 200, -200, 340, -300, -20, 50, 400, -460, 430, 1000, 700, 50, 90] -> single array with all the movements
+// const overallBalance = allMovements.reduce((acc, mov) => acc + mov, 0);
+// console.log(overallBalance); // 17840
+
+// // chaining version of all the above
+// const overalBalance = accounts
+//   .map(acc => acc.movements)
+//   .flat()
+//   .reduce((acc, mov) => acc + mov, 0);
+// console.log(overalBalance); // 17840
+
+// // it turns out that using a map() followed by a flat() is a fairly common operation, hence FLATMAP!!!
+// const fmBalance = accounts
+//   .flatMap(acc => acc.movements) // only goes one level deep
+//   .reduce((acc, mov) => acc + mov, 0);
+// console.log(fmBalance);
+
+// 163. Sorting Arrays
+
+// const owners = ['Jonas', 'Zach', 'Adam', 'Martha'];
+// console.log(owners.sort()); // ['Adam', 'Jonas', 'Martha', 'Zach'] -> strings alphabetically
+
+// // Numbers
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// console.log(movements); // [200, 450, -400, 3000, -650, -130, 70, 1300]
+// console.log(movements.sort()); // [-130, -400, -650, 1300, 200, 3000, 450, 70] -> weird huh?? -> sorts by strings
+
+// // return < 0, a before B
+// // return > 0, b before a
+// movements.sort((a, b) => {
+//   if (a > b) return 1;
+//   if (b > a) return -1;
+// });
+// console.log(movements); // asc = [-650, -400, -130, 70, 200, 450, 1300, 3000]
+
+// // Dramatically cleaner version of asc
+// movements.sort((a, b) => a - b);
+// console.log(movements);
+
+// // descending = the reverse
+// movements.sort((a, b) => {
+//   if (a > b) return -1;
+//   if (b > a) return 1;
+// });
+// console.log(movements); // desc = [3000, 1300, 450, 200, 70, -130, -400, -650]
+
+// // Dramatically cleaner version of desc
+// movements.sort((a, b) => b - a);
+// console.log(movements);
+
+// 164. More Ways of Creating and Filling Arrays
+
+// Normal Ways of Creating Arrays
+// const arr = [1, 2, 3, 4, 5, 6, 7];
+// console.log(new Array(1, 2, 3, 4, 5, 6, 7));
+
+// // Empty arrays + fill method
+// const x = new Array(7);
+// console.log(x); // [empty × 7]
+// // console.log(x.fill(1)); // [1, 1, 1, 1, 1, 1, 1] -> mutates
+// x.fill(1, 3, 5);
+// console.log(x); // [empty × 3, 1, 1, empty × 2] [comment out fill(1) above first]
+
+// arr.fill(23, 2, 6); // fill value, start pos, end pos (exclusive)
+// console.log(arr); // [1, 2, 23, 23, 23, 23, 7]
+
+// // Array.from
+// const y = Array.from({ length: 7 }, () => 1);
+// console.log(y); // [1, 1, 1, 1, 1, 1, 1]
+
+// const z = Array.from({ length: 7 }, (_, i) => i + 1);
+// console.log(z);
+
+// // create arrays from other iterables -> Array.from was invented for this
+
+// // convert a node list to an array
+// // when you click on the balance in the bankist app, you get an array of the movements in the console log
+
+// labelBalance.addEventListener('click', function () {
+//   const movementsUI = Array.from(
+//     document.querySelectorAll('.movements__value'),
+//     el => Number(el.textContent.replace('€', '')) // remove the €
+//   );
+
+//   console.log(movementsUI);
+// });
