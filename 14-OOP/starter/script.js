@@ -87,3 +87,163 @@ console.dir(x => x + 1);
 // 212. Coding Challenge #1
 
 // 213. ES6 Classes
+
+// syntactic sugar but work the same way as above
+
+// class expression
+// const PersonCL = class {};
+
+// class declaration
+class PersonCL {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  static hey() {
+    console.log('Hey there!!! 👋');
+  }
+}
+
+const jessica = new PersonCL('Jessica', 1996);
+jessica.calcAge(); // 41
+
+console.log(jessica.__proto__ === PersonCL.prototype); // true
+
+PersonCL.prototype.greet = function () {
+  console.log(`Hey ${this.firstName}`);
+};
+
+jessica.greet(); // Hey Jessica
+
+// Classes are NOT hoisted!!!!
+// Classes are 1st class citizens - can pass into and out of functions
+// Classes are executed in strict mode!!
+
+// ES6 classes keep all the code together - for example, the methods are in close proximity
+
+// 214. Setters and Getters
+// const account = {
+//   owner: 'jonas',
+//   movements: [200, 530, 120, 300],
+
+//   get latest() {
+//     return this.movements.slice(-1).pop();
+//   },
+
+//   set latest(mov) {
+//     this.movements.push(mov);
+//   },
+// };
+
+// console.log(account.latest); // 300
+
+// account.latest = 50;
+// console.log(account.movements); // [200, 530, 120, 300, 50] Note: 50 on the end now!!
+
+// class PersonGet {
+//   constructor(fullName, birthYear) {
+//     this.fullName = fullName;
+//     this.birthYear = birthYear;
+//   }
+
+//   calcAge() {
+//     console.log(2037 - this.birthYear);
+//   }
+
+//   get age() {
+//     return 2037 - this.birthYear;
+//   }
+
+//   // set a property that already exists (_)
+//   set fullName(name) {
+//     console.log(name);
+//     if (name.includes(' ')) this._fullName = name;
+//     else alert(`${name} is not a full name!`); // sets an alert if the name doesn't have a space
+//   }
+
+//   get fullName() {
+//     return this._fullName;
+//   }
+// }
+
+// const alun = new PersonGet('Alun Price', 1973);
+// console.log(alun); // PersonGet {firstName: 'Alun Price', birthYear: 1973}
+// alun.calcAge(); // 64
+// console.log(alun.age); // 64
+
+// console.log(alun.__proto__ === PersonGet.prototype); // true
+
+// const walter = new PersonGet('Walter White', 1965);
+// console.log(walter.fullName); //  Walter White - get the alert if just walter [with no space!]
+
+// 215. Static Methods
+
+// see Array.from - converts any array-like structure into a real array
+// Array.from could not be [1, 2, 3 ].from because function is attached to Array, not the array's prototype
+// from method is in the Array namespace
+// Another example is Number.parseFloat(12)
+
+// Instance methods - will be added to the .prototype property
+// Static methods  - take the static keyword - see hey method in PersonStatic class
+
+class PersonStatic {
+  constructor(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  }
+
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  }
+
+  get age() {
+    return 2037 - this.birthYear;
+  }
+
+  static hey() {
+    console.log('Hey there!!! 👋');
+  }
+}
+
+PersonStatic.hey(); // Hey there!!! 👋
+
+// 216. Object.Create()
+
+// use object.create to manually set the prototype to any that we want ...
+const PersonProto = {
+  calcAge() {
+    console.log(2037 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonProto);
+console.log(steven); // {} -> Prototype -> calcAge
+
+steven.name = 'Steven';
+steven.birthYear = 2002;
+steven.calcAge(); // 35
+
+console.log(steven.__proto__); // {calcAge: f}
+console.log(steven.__proto__ === PersonProto); // true
+console.log(steven.__proto__.__proto__); // Object
+console.log(steven.__proto__.__proto__.__proto__); // Null
+
+const sarah = Object.create(PersonProto);
+sarah.init('Sarah', 1979); // use the init method kinda like a constructor but NOT THE SAME
+sarah.calcAge(); // 58
+
+// 218.   Inheritance Between "Classes" : Constructor Functions
