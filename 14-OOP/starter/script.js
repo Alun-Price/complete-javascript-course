@@ -249,42 +249,273 @@
 // 218.   Inheritance Between "Classes" : Constructor Functions
 
 // create a new student child "class" and make it inherit from the Person parent "class"
-const Person = function (firstName, birthYear) {
-  this.firstName = firstName;
-  this.birthYear = birthYear;
-};
+// const Person = function (firstName, birthYear) {
+//   this.firstName = firstName;
+//   this.birthYear = birthYear;
+// };
 
-Person.prototype.calcAge = function () {
-  console.log(2037 - this.birthYear);
-};
+// Person.prototype.calcAge = function () {
+//   console.log(2037 - this.birthYear);
+// };
 
-const Student = function (firstName, birthYear, course) {
-  Person.call(this, firstName, birthYear);
-  this.course = course;
-};
+// const Student = function (firstName, birthYear, course) {
+//   Person.call(this, firstName, birthYear);
+//   this.course = course;
+// };
 
-// linking prototypes
-Student.prototype = Object.create(Person.prototype); // must be added at this point as would overwrite the introduce
+// // linking prototypes
+// Student.prototype = Object.create(Person.prototype); // must be added at this point as would overwrite the introduce
 
-Student.prototype.introduce = function () {
-  console.log(`My name is ${this.firstName} and I study ${this.course}`);
-};
+// Student.prototype.introduce = function () {
+//   console.log(`My name is ${this.firstName} and I study ${this.course}`);
+// };
 
-const mike = new Student('Mike', 2020, 'Computer Science');
-console.log(mike); // Student {firstName: 'Mike', birthYear: 2020, course: 'Computer Science'}
-mike.introduce(); // My name is Mike and I study Computer Science
-mike.calcAge(); // 17 - method from Person prototype
+// const mike = new Student('Mike', 2020, 'Computer Science');
+// console.log(mike); // Student {firstName: 'Mike', birthYear: 2020, course: 'Computer Science'}
+// mike.introduce(); // My name is Mike and I study Computer Science
+// mike.calcAge(); // 17 - method from Person prototype
 
-// regular function call - this keyword is set to undefined - why we use Person.call(this, firstName, birthYear) in Student fn
-// we needed object.create() because Student.prototype should NOT equal Person.prototype - Person.prototype should be a prototype for Student.prototype!!
-// Prototype Chain -> Object [mike] -> Student.prototype -> Person.prototype -> Object.prototype -> Null
+// // regular function call - this keyword is set to undefined - why we use Person.call(this, firstName, birthYear) in Student fn
+// // we needed object.create() because Student.prototype should NOT equal Person.prototype - Person.prototype should be a prototype for Student.prototype!!
+// // Prototype Chain -> Object [mike] -> Student.prototype -> Person.prototype -> Object.prototype -> Null
 
-console.log(mike.__proto__); // Person (and not Student as expected) - artifact of using Object.create()
-console.log(mike.__proto__.__proto__); // calcAge, constructor
+// console.log(mike.__proto__); // Person (and not Student as expected) - artifact of using Object.create()
+// console.log(mike.__proto__.__proto__); // calcAge, constructor
 
-console.log(mike instanceof Student); // true
-console.log(mike instanceof Person); // true
-console.log(mike instanceof Object); // true
+// console.log(mike instanceof Student); // true
+// console.log(mike instanceof Person); // true
+// console.log(mike instanceof Object); // true
 
-Student.prototype.constructor = Student; // need to do this as mike.__proto__ was showing as Person
-console.dir(Student.prototype.constructor); // Student with Person prototype
+// Student.prototype.constructor = Student; // need to do this as mike.__proto__ was showing as Person
+// console.dir(Student.prototype.constructor); // Student with Person prototype
+
+// 219. Coding Challenge #2
+
+// 220. Inheritance Between "Classes" : ES6 Classes
+// class StudentCl extends Person {
+//   // only need constructor if need extra over parent class
+//   constructor(fullName, birthYear, course) {
+//     // needs to happen first
+//     super(fullName, birthYear);
+//     this.course = course;
+//   }
+
+//   introduce() {
+//     console.log(`My name is ${this.firstName} and I study ${this.course}`);
+//   }
+
+//   calcAge() {
+//     console.log(
+//       `I'm ${2037 - this.birthYear} years old, but I feel more like ${
+//         2037 - this.birthYear + 10
+//       } due to excessive amounts of study!!!`
+//     );
+//   }
+// }
+
+// const martha = new StudentCl('Martha Jones', 2012, 'Computer Science');
+// console.log(martha); // StudentCl {firstName: 'Martha Jones', birthYear: 2012, course: 'Computer Science'}
+// martha.calcAge(); // old calcAge from parent is overwritten by the new calcAge fn - polymorphism
+// martha.introduce(); // My name is Martha Jones and I study Computer Science
+
+// 221. Inheritance Between "Classes" : Object.create()
+
+// const PersonProto = {
+//   calcAge() {
+//     console.log(2037 - this.birthYear);
+//   },
+
+//   init(firstName, birthYear) {
+//     this.firstName = firstName;
+//     this.birthYear = birthYear;
+//   },
+// };
+
+// const steven = Object.create(PersonProto);
+
+// const StudentProto = Object.create(PersonProto); // StudentProto under PersonProto
+// StudentProto.init = function (firstName, birthYear, course) {
+//   PersonProto.init.call(this, firstName, birthYear);
+//   this.course = course;
+// };
+
+// StudentProto.introduce = function () {
+//   console.log(`My name is ${this.firstName} and I study ${this.course}`);
+// };
+
+// const jay = Object.create(StudentProto); // jay linked to StudentProto and therefore to PersonProto
+
+// // [jay] Object -> StudentProto -> PersonProto [calcAge] -> Object prototype -> null
+
+// jay.init('Jay', 2010, 'Science'); // typing jay in console -> {firstName: 'Jay', birthYear: 2010, course: 'Science'}
+// jay.introduce(); // My name is Jay and I study Science
+// jay.calcAge(); // 27 - from PersonProto
+
+// to check the chain, console.log jay, press enter, click down arrow to prototype -> init and introduce
+// second prototype - click down arrow -> calcAge and init from PersonProto
+
+// 222. Another Class Example
+
+// class Account {
+//   constructor(owner, currency, pin) {
+//     this.owner = owner;
+//     this.currency = currency;
+//     // Protected Property
+//     this._pin = pin;
+//     this._movements = [];
+//     this.locale = navigator.language;
+
+//     console.log(`Thanks for opening an account, ${owner}`);
+//   }
+//   // Public Interface
+//   getMovements() {
+//     return this._movements;
+//   }
+
+//   deposit(val) {
+//     this._movements.push(val);
+//   }
+
+//   withdraw(val) {
+//     this.deposit(-val);
+//   }
+
+//   _approveLoan(val) {
+//     return true; // dont want complex logic for example here
+//   }
+
+//   requestLoan(val) {
+//     if (this._approveLoan(val)) {
+//       this.deposit(val);
+//       console.log('Loan approved!');
+//     }
+//   }
+// }
+
+// const acc1 = new Account('Jonas', 'EUR', 1111);
+// console.log(acc1);
+
+// acc1.deposit(250);
+// acc1.withdraw(140);
+
+// console.log(acc1);
+// console.log(acc1._pin); // 1111 - BUT shouldn't be accessible from outside account!!!
+
+// acc1.requestLoan(1000); // Loan approved - public domain okay
+// acc1._approveLoan(1000); // Should not be able to access this method in public domain!!
+
+// SO it becomes obvious that we need data encapsulation and data privacy!!!!
+
+//  223. Encapsulation : Protected Properties and Methods
+
+// 2 Reasons for Encapsulation
+// Prevent code from outside the class manipulating code inside the class
+// When we expose only a small subset of methods to the public interface, we can change with confidence the private methods without worrying about changing code that the external interface relies on!
+
+// Proposals in place for JS to truely support privacy BUT not fully realised yet
+// Here we will fake privacy - movements array is first
+// Protected methods begin with _ - convention so other team members know that the class is not to be touched outside of the class (_movements)
+
+// console.log(acc1.getMovements()); // [250, -140, 1000] - can get the movements without changing the movements array
+// console.log(acc1._pin); // 1111 - still accessible
+
+// 224. Encapsulation: Private Class Fields and Methods
+
+// "Class fields" proposal - not part of JS right now
+// Public Fields
+// Private Fields
+// Public Methods
+// Private Methods
+
+class Account {
+  // Public Fields (instances)
+  locale = navigator.language;
+
+  // Private Fields (instances)
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    // Protected Property
+    this.#pin = pin;
+    //this.#movements = [];
+    //this.locale = navigator.language;
+
+    console.log(`Thanks for opening an account, ${owner}`);
+  }
+  // Public Interface/Methods
+  getMovements() {
+    return this.#movements;
+  }
+
+  deposit(val) {
+    this.#movements.push(val);
+    return this;
+  }
+
+  withdraw(val) {
+    this.deposit(-val);
+    return this;
+  }
+
+  requestLoan(val) {
+    if (this.#approveLoan(val)) {
+      this.deposit(val);
+      console.log('Loan approved!');
+      return this;
+    }
+  }
+
+  // Private Methods
+  #approveLoan(val) {
+    return true; // dont want complex logic for example here
+  }
+
+  // Static - not available on instances but on the class itself
+  static helper() {
+    console.log('Helper');
+  }
+}
+
+const acc1 = new Account('Jonas', 'EUR', 1111);
+// console.log(acc1);
+// // console.log(#pin); // Uncaught SyntaxError: Private field '#pin' must be declared in an enclosing class
+// // console.log(#movements); // Uncaught SyntaxError: Private field '#movements' must be declared in an enclosing class
+// console.log(acc1.getMovements()); // []
+// //acc1.#approveLoan(100); // Uncaught SyntaxError: Private field '#approveLoan' must be declared in an enclosing class
+// // note that #methods not operational yet!!
+
+// //console.log(acc1.helper()); // static not available on instance
+// console.log(Account.helper()); // static method is available on the class
+
+// 225. Chaining Methods
+
+// If we want to chain the methods in a class (usually get type methods), we need to add a 'return this;' line.  This is because the chaining process requires a return and we want to return Account for the next method in the chain!!
+
+// Example
+acc1.deposit(300).deposit(500).withdraw(35).requestLoan(25000).withdraw(4000);
+console.log(acc1.getMovements()); // [300, 500, -35, 25000, -4000] - after we add return this to the methods!!!
+
+// 226. ES6 Class Summary
+
+// Watch the video to get an overview of the ES6 class syntax
+
+// extend Parent
+// Public Fields
+// Private Fields (#)
+// Public static fields
+// constructor() {super(parent params); this.#course = course}
+// Public Method introduce() {}
+// Private Method(works?) #makeCoffee()
+// How to ref private and public fields in method this.#studyHours += h;
+// Getter Method - get testScore() {return this._testScore;}
+// Setter Method - set testScore(score) {this._testScore = score < 20 ? score :0;}
+// Static Method = available only on class, not on instances
+// Creating new object - const student = new Student('Jonas', 2020, 2037, 'Medecine');
+
+// Classes are "syntactic sugar" over constructor functions
+// Classes are NOT hoisted
+// Classes are 1st class citizens
+// Class body is always executed in strict mode
