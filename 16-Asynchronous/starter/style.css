@@ -4,6 +4,13 @@
   box-sizing: inherit;
 }
 
+/* for debugging */
+/* *,
+*:before,
+*:after {
+  outline: solid 1px #000;
+} */
+
 html {
   font-size: 62.5%;
   box-sizing: border-box;
@@ -24,15 +31,34 @@ body {
   display: flex;
   flex-flow: column;
   align-items: center;
+  /*overflow-x: auto;*/
 }
 
 .countries {
   /* margin-bottom: 8rem; */
   display: flex;
-
+  width: 30%;
   font-size: 2rem;
   opacity: 0;
   transition: opacity 1s;
+}
+
+/* .countryMain::before {
+  content: 'Selected Country';
+  width: 100%;
+  position: absolute;
+  top: -4rem;
+
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgb(95, 94, 94);
+} */
+
+.countryMain {
+  transform: scale(0.9);
+  margin-left: 0;
 }
 
 .country {
@@ -70,6 +96,7 @@ body {
   background-color: #eee;
   border-top-left-radius: 0.7rem;
   border-top-right-radius: 0.7rem;
+  border-bottom: 1px solid #888;
 }
 
 .country__data {
@@ -106,6 +133,7 @@ body {
   color: white;
   background-color: orangered;
   cursor: pointer;
+  margin-top: 3rem;
 }
 
 .images {
