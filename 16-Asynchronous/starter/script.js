@@ -242,3 +242,82 @@
 // btn.addEventListener('click', function () {
 //   getCountryData('ie');
 // });
+
+// 258. The EVENT LOOP in Practice
+
+// console.log('Test Start');
+// setTimeout(() => console.log('0 sec timer'), 0);
+// Promise.resolve('Resolved promise 1').then(res => console.log(res));
+// console.log('Test End');
+
+// Order = Test Start/Test End/Resolved promise 1/ 0 sec timer
+// 1st two - synchronous logs - will come before any callback
+// both the next two, will finish at the same time
+// one after 0 secs, one immediately resolved
+// timer finished kinda first as it's first in the code order
+// However, it's callback goes in the callback queue
+// whereas the Promise.resolve goes in the Microtasks Queue
+// which takes precedence over the callback queue!!!
+
+// We can extend the time the microtask takes using a loop
+// Here we see that setTimeout of 0 does NOT take 0 secs!!!
+
+// console.log('Test Start');
+// setTimeout(() => console.log('0 sec timer'), 0);
+// Promise.resolve('Resolved promise 2').then(res => {
+//   for (let i = 0; i < 10000000000; i++) {}
+//   console.log(res);
+// });
+// console.log('Test End');
+
+// 259. Building A Simple Promise
+
+// simulate a lottery - 50% chance of winning
+// Note: the resolve, reject of the Promise
+// We use .then to do something with the result
+
+// const lotteryPromise = new Promise(function (resolve, reject) {
+//   console.log('Lottery Draw is Happening');
+//   setTimeout(function () {
+//     if (Math.random() >= 0.5) {
+//       resolve('You WIN!!!!');
+//     } else {
+//       reject(new Error('You lost your money!!!!'));
+//     }
+//   }, 2000);
+// });
+
+// // consume the promise
+// lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+// // Promisifying = convert synchronous callback behaviour to async
+// const wait = function (seconds) {
+//   return new Promise(function (resolve) {
+//     setTimeout(resolve, seconds * 1000);
+//   });
+// };
+
+// wait(2)
+//   .then(() => {
+//     console.log(`I waited for 2 seconds`);
+//     return wait(1);
+//   })
+//   .then(() => console.log(`I waited for 1 second`));
+
+// // Generate resolved or rejected value straight away
+// Promise.resolve('abc').then(x => console.log(x)); // abc
+// Promise.reject(new Error('Problem!')).catch(x => console.error(x)); // Error: Problem!
+
+// 260. Promisifying the Geolocation API
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    // navigator.geolocation.getCurrentPosition(
+    //   position => console.log(position),
+    //   err => reject(err)
+    // );
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+getPosition().then(pos => console.log(pos));
