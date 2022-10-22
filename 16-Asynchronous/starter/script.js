@@ -1,5 +1,38 @@
 'use strict';
+const btn = document.querySelector('.btn-country');
+const countriesContainer = document.querySelector('.countries');
 
+const renderCountry = function (data, className = '') {
+  const html = `
+  <article class="country ${className}">
+    <img class="country__img" src="${data.flag}" />
+    <div class="country__data">
+      <h3 class="country__name">${data.name}</h3>
+      <h4 class="country__region">${data.region}</h4>
+      <p class="country__row"><span>👫</span>${(
+        +data.population / 1000000
+      ).toFixed(1)} people</p>
+      <p class="country__row"><span>🗣️</span>${data.languages[0].name}</p>
+      <p class="country__row"><span>💰</span>${data.currencies[0].name}</p>
+    </div>
+  </article>
+  `;
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.style.opacity = 1;
+};
+
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  countriesContainer.style.opacity = 1;
+};
+
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+
+    return response.json();
+  });
+};
 // const btn = document.querySelector('.btn-country');
 // const countriesContainer = document.querySelector('.countries');
 
@@ -310,14 +343,115 @@
 
 // 260. Promisifying the Geolocation API
 
-const getPosition = function () {
-  return new Promise(function (resolve, reject) {
-    // navigator.geolocation.getCurrentPosition(
-    //   position => console.log(position),
-    //   err => reject(err)
-    // );
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
-};
+// const getPosition = function () {
+//   return new Promise(function (resolve, reject) {
+//     // navigator.geolocation.getCurrentPosition(
+//     //   position => console.log(position),
+//     //   err => reject(err)
+//     // );
+//     navigator.geolocation.getCurrentPosition(resolve, reject);
+//   });
+// };
 
-getPosition().then(pos => console.log(pos));
+// getPosition().then(pos => console.log(pos));
+
+// // 262. Consuming Promises With ASYNC / AWAIT
+
+// const whereAmI = async function (country) {
+//   const res = await fetch(
+//     `https://restcountries.com/v3.1/alpha?codes=${country}`
+//   );
+//   console.log(res.json());
+// };
+
+// whereAmI('IE');
+// console.log('FIRST'); // This appears first as we await the API call in the background
+
+// async/await works exactly like fetch/.then() -> syntactic sugar
+// only about consuming promises
+
+// 263. Error Handling with Async/Await
+
+// try {
+//   let y = 1;
+//   const x = 2;
+//   x = 3;
+// } catch (err) {
+//   alert(err.message);
+// }
+
+// 264. Returning Values From Async Functions
+// 265. Running Promises In Parallel
+
+// const get3Countries = async function (c1, c2, c3) {
+//   try {
+//     const data = await Promise.all([
+//       getJSON(`https://restcountries.com/v3.1/alpha?codes=${c1}`),
+//       getJSON(`https://restcountries.com/v3.1/alpha?codes=${c2}`),
+//       getJSON(`https://restcountries.com/v3.1/alpha?codes=${c3}`),
+//     ]);
+
+//     console.log(data.map(d => d[0].capital));
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+
+// get3Countries('IE', 'GB', 'FR'); // ['Dublin'], ['london], ['Paris']
+
+// 266. Other Promise Combinators: Race, Allsettled and Any
+
+// Promise.race
+// Settled as soon as one of the promises gets settled - First one to settle wins the race!!
+
+// (async function () {
+//   const res = await Promise.race([
+//     getJSON(`https://restcountries.com/v3.1/alpha?codes=IE`),
+//     getJSON(`https://restcountries.com/v3.1/alpha?codes=FR`),
+//     getJSON(`https://restcountries.com/v3.1/alpha?codes=GB`),
+//   ]);
+//   console.log(res[0]);
+// })();
+
+// // cl's the quickest country to load
+// // we can use a setTimeout to race against a promise to control the amount of time we're willing to wait for the promise to resolve .. Used very often in commercial programming
+
+// const timeout = function (sec) {
+//   return new Promise(function (_, reject) {
+//     setTimeout(function () {
+//       reject(new Error('Request took too long!!'));
+//     }, sec * 1000);
+//   });
+// };
+
+// Promise.race([
+//   getJSON(`https://restcountries.com/v3.1/alpha?codes=IE`),
+//   timeout(0.3),
+// ])
+//   .then(res => console.log(res[0]))
+//   .catch(err => console.error(err));
+
+// // Promise.allSettled
+// // Never short circuits if one promise rejects
+
+// Promise.allSettled([
+//   Promise.resolve('Success'),
+//   Promise.reject('ERROR'),
+//   Promise.resolve('Another success'),
+// ])
+//   .then(res => console.log(res))
+//   .catch(err => console.error(err));
+
+// // Success, ERROR, Another success - even the rejected promise is "fulfilled"
+
+// // Promise.any() - ES2021
+// // Return the first fulfilled promise but rejected are ignored
+// Promise.any([
+//   Promise.resolve('Success'),
+//   Promise.reject('ERROR'),
+//   Promise.resolve('Another success'),
+// ])
+//   .then(res => console.log(res))
+//   .catch(err => console.error(err));
+
+// // Success

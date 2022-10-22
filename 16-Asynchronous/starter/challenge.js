@@ -1,44 +1,44 @@
 'use strict';
 
-const btn = document.querySelector('.btn-country');
-const countriesContainer = document.querySelector('.countries');
+// const btn = document.querySelector('.btn-country');
+// const countriesContainer = document.querySelector('.countries');
 
-const renderCountry = function (data, className = '') {
-  let language = Object.values(data.languages)[0];
-  let currency = Object.values(data.currencies)[0];
+// const renderCountry = function (data, className = '') {
+//   let language = Object.values(data.languages)[0];
+//   let currency = Object.values(data.currencies)[0];
 
-  let html = `
-        <article class="country ${className}">
-            <img class="country__img" src="${data.flags.svg}" />
-            <div class="country__data">
-                <h3 class="country__name">${data.name.common}</h3>
-                <h4 class="country__region">${data.region}</h4>
-                <p class="country__row"><span>👫</span>${(
-                  +data.population / 1000000
-                ).toFixed(2)} million</p>
-                <p class="country__row"><span>🗣️</span>${language}</p>
-                <p class="country__row"><span>💰</span>${currency.name} ( ${
-    currency.symbol
-  } )</p>
-            </div>
-        </article>`;
+//   let html = `
+//         <article class="country ${className}">
+//             <img class="country__img" src="${data.flags.svg}" />
+//             <div class="country__data">
+//                 <h3 class="country__name">${data.name.common}</h3>
+//                 <h4 class="country__region">${data.region}</h4>
+//                 <p class="country__row"><span>👫</span>${(
+//                   +data.population / 1000000
+//                 ).toFixed(2)} million</p>
+//                 <p class="country__row"><span>🗣️</span>${language}</p>
+//                 <p class="country__row"><span>💰</span>${currency.name} ( ${
+//     currency.symbol
+//   } )</p>
+//             </div>
+//         </article>`;
 
-  countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
-};
+//   countriesContainer.insertAdjacentHTML('beforeend', html);
+//   countriesContainer.style.opacity = 1;
+// };
 
-const renderError = function (msg) {
-  countriesContainer.insertAdjacentText('beforeend', msg);
-  // countriesContainer.style.opacity = 1;
-};
+// const renderError = function (msg) {
+//   countriesContainer.insertAdjacentText('beforeend', msg);
+//   // countriesContainer.style.opacity = 1;
+// };
 
-const getJSON = function (url, errorMsg = `Something went wrong`) {
-  return fetch(url).then(response => {
-    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+// const getJSON = function (url, errorMsg = `Something went wrong`) {
+//   return fetch(url).then(response => {
+//     if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
 
-    return response.json();
-  });
-};
+//     return response.json();
+//   });
+// };
 
 // Coding Challenge #1
 
@@ -190,3 +190,103 @@ const getJSON = function (url, errorMsg = `Something went wrong`) {
 //     currentImg.style.display = 'none';
 //   })
 //   .catch(err => console.log(err));
+
+// Coding Challenge #3
+
+// Your tasks:
+// PART 1
+// 1. Write an async function 'loadNPause' that recreates Challenge #2, this time using async/await (only the part where the promise is consumed, reuse the 'createImage' function from before)
+// 2. Compare the two versions, think about the big differences, and see which one you like more
+// 3. Don't forget to test the error handler, and to set the network speed to “Fast 3G” in the dev tools Network tab
+
+// Solution (Part1)
+
+// const wait = function (seconds) {
+//   return new Promise(function (resolve) {
+//     setTimeout(resolve, seconds * 1000);
+//   });
+// };
+
+// const imgContainer = document.querySelector('.images'); // selects images class = image container
+
+// const createImage = function (imgPath) {
+//   return new Promise(function (resolve, reject) {
+//     const img = document.createElement('img'); // makes img and saves it in img
+//     img.src = imgPath; // uses path to get img
+
+//     img.addEventListener('load', function () {
+//       imgContainer.append(img); // add that image to the container once it loads
+//       resolve(img); // positive outcome of promise
+//     });
+
+//     // deal with reject/negative outcome of promise
+//     img.addEventListener('error', function () {
+//       reject(new Error('Image not found!')); // custom error if img doesn't load
+//     });
+//   });
+// };
+
+// let currentImg;
+
+// createImage('img/img-1.jpg')
+//   .then(img => {
+//     currentImg = img;
+//     console.log('Image 1 loaded');
+//     return wait(2); // return wait fn so can chain the next .then()
+//   })
+//   .then(() => {
+//     // wait fn doesn't return any value, so ()
+//     currentImg.style.display = 'none'; // remove the current image after 2 secs
+//     return createImage('img/img-2.jpg');
+//   })
+//   .then(img => {
+//     currentImg = img;
+//     console.log('Image 2 loaded');
+//     return wait(2);
+//   })
+//   .then(() => {
+//     currentImg.style.display = 'none';
+//   })
+//   .catch(err => console.log(err));
+
+// const loadNPause = async function () {
+//   try {
+//     // Load Image 1
+//     let img = await createImage('img/img-1.jpg');
+//     console.log('Image 1 Loaded');
+//     await wait(2); // don't need to save to variable as has no value
+//     img.style.display = 'none'; // in same scope, can use img - no need for global currentImg
+//     await createImage('img/img-2.jpg');
+//     console.log('Image 2 loaded');
+//     await wait(2);
+//     img.style.display = 'none';
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+
+// loadNPause();
+
+// // PART 2
+// // 1. Create an async function 'loadAll' that receives an array of image paths 'imgArr'
+// // 2. Use .map to loop over the array, to load all the images with the
+// // 'createImage' function (call the resulting array 'imgs')
+// // 3. Check out the 'imgs' array in the console! Is it like you expected?
+// // 4. Use a promise combinator function to actually get the images from the array 😉
+// // 5. Add the 'parallel' class to all the images (it has some CSS styles)
+// // Test data Part 2: ['img/img-1.jpg', 'img/img-2.jpg', 'img/img-
+// // 3.jpg']. To test, turn off the 'loadNPause' function
+
+// const loadAll = async function (imgArr) {
+//   try {
+//     const imgs = imgArr.map(async img => await createImage(img));
+//     console.log(imgs); // returns the promises
+//     const imgsEl = await Promise.all(imgs);
+//     console.log(imgsEl);
+//     imgsEl.forEach(img => img.classList.add('parallel'));
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
+
+// loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']);
