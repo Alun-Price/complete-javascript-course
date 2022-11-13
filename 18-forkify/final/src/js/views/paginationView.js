@@ -34,6 +34,11 @@ class PaginationView extends View {
       `;
     }
 
+    // Page 1, and there are NO other pages
+    if (curPage === 1 && numPages === 1) {
+      return '';
+    }
+
     // Last page
     if (curPage === numPages && numPages > 1) {
       return `
@@ -69,9 +74,6 @@ class PaginationView extends View {
         </button>
       `;
     }
-
-    // Page 1, and there are NO other pages
-    return '';
   }
 }
 
